@@ -1,8 +1,3 @@
-/**
- * メモ
- * - dayjs.toDateは禁止。timezone指定してもローカルタイムゾーンになる。やるなら、dayJST().hour()などで取得する
- */
-
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
@@ -32,6 +27,7 @@ const toJSTFromUTC = (...params: Parameters<typeof dayjs.utc>) =>
 
 /**
  * dayjsが標準で日付として認識できない文字列を、日付として解析する
+ *
  * @example
  * toJSTFromFormat({date: "2021年01月01日", dateformat: "YYYY年MM月DD日"}).toISOString()
  * // 2021-01-01T00:00:00.000Z
@@ -40,6 +36,9 @@ const toJSTFromUTC = (...params: Parameters<typeof dayjs.utc>) =>
  */
 export const toJSTFromFormat = (params: {
   date: Parameters<typeof dayjs.utc>[0];
+  /**
+   * @see https://day.js.org/docs/en/parse/string-format#list-of-all-available-parsing-tokens
+   */
   dateformat: "YYYY年MM月DD日";
 }) => toJSTFromUTC(params.date, params.dateformat);
 
