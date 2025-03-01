@@ -262,47 +262,27 @@ describe("date", () => {
     it("日本 - Asia/Tokyo", () => {
       process.env.TZ = "Asia/Tokyo";
 
+      expect(Features.dayJST(date, "YYYY年MM月DD日").toDate().toString()).toBe(
+        "Sat Jan 01 2000 09:00:00 GMT+0900 (日本標準時)"
+      );
+      expect(Features.dayJST(date, "YYYY年MM月DD日").toString()).toBe(
+        "Sat, 01 Jan 2000 00:00:00 GMT"
+      );
       expect(
-        Features.toJSTFromFormat({
-          date,
-          dateformat: "YYYY年MM月DD日",
-        })
-          .toDate()
-          .toString()
-      ).toBe("Sat Jan 01 2000 09:00:00 GMT+0900 (日本標準時)");
-      expect(
-        Features.toJSTFromFormat({
-          date,
-          dateformat: "YYYY年MM月DD日",
-        }).toString()
-      ).toBe("Sat, 01 Jan 2000 00:00:00 GMT");
-      expect(
-        Features.toJSTFromFormat({ date, dateformat: "YYYY年MM月DD日" }).format(
-          "YYYY-MM-DDTHH:mm:ss"
-        )
+        Features.dayJST(date, "YYYY年MM月DD日").format("YYYY-MM-DDTHH:mm:ss")
       ).toBe("2000-01-01T09:00:00");
     });
     it("Nome、AK - アメリカ合衆国 - America/Nome", () => {
       process.env.TZ = "America/Nome";
 
+      expect(Features.dayJST(date, "YYYY年MM月DD日").toDate().toString()).toBe(
+        "Fri Dec 31 1999 15:00:00 GMT-0900 (アラスカ標準時)"
+      );
+      expect(Features.dayJST(date, "YYYY年MM月DD日").toString()).toBe(
+        "Sat, 01 Jan 2000 00:00:00 GMT"
+      );
       expect(
-        Features.toJSTFromFormat({
-          date,
-          dateformat: "YYYY年MM月DD日",
-        })
-          .toDate()
-          .toString()
-      ).toBe("Fri Dec 31 1999 15:00:00 GMT-0900 (アラスカ標準時)");
-      expect(
-        Features.toJSTFromFormat({
-          date,
-          dateformat: "YYYY年MM月DD日",
-        }).toString()
-      ).toBe("Sat, 01 Jan 2000 00:00:00 GMT");
-      expect(
-        Features.toJSTFromFormat({ date, dateformat: "YYYY年MM月DD日" }).format(
-          "YYYY-MM-DDTHH:mm:ss"
-        )
+        Features.dayJST(date, "YYYY年MM月DD日").format("YYYY-MM-DDTHH:mm:ss")
       ).toBe("2000-01-01T09:00:00");
     });
   });

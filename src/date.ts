@@ -26,28 +26,23 @@ const toJSTFromUTC = (...params: Parameters<typeof dayjs.utc>) =>
   dayjs.utc(...params).tz(TIMEZONE);
 
 /**
- * dayjsが標準で日付として認識できない文字列を、日付として解析する
- *
- * @example
- * toJSTFromFormat({date: "2021年01月01日", dateformat: "YYYY年MM月DD日"}).toISOString()
- * // 2021-01-01T00:00:00.000Z
- * toJSTFromFormat({date: "2021あいうえお01かきくけこ01さしすせそ", dateformat: "YYYYあいうえおMMかきくけこDDさしすせそ"}).toISOString()
- * // 2021-01-01T00:00:00.000Z
- */
-export const toJSTFromFormat = (params: {
-  date: Parameters<typeof dayjs.utc>[0];
-  /**
-   * @see https://day.js.org/docs/en/parse/string-format#list-of-all-available-parsing-tokens
-   */
-  dateformat: "YYYY年MM月DD日";
-}) => toJSTFromUTC(params.date, params.dateformat);
-
-/**
  * 日付文字列を、JSTの日付オブジェクトに変換する
  */
-export const dayJST = (date?: Parameters<typeof dayjs.utc>[0]) => {
+export const dayJST = (
+  date?: Parameters<typeof dayjs.utc>[0],
+  /**
+   * dayjsが標準で日付として認識できない文字列を、日付として解析する
+   *
+   * @see https://day.js.org/docs/en/parse/string-format#list-of-all-available-parsing-tokens
+   * @example dayJST("2021年01月01日", "YYYY年MM月DD日")
+   * // 2021-01-01T00:00:00.000Z
+   * dayJST("2021あいうえお01かきくけこ01さしすせそ", "YYYYあいうえおMMかきくけこDDさしすせそ")
+   * // 2021-01-01T00:00:00.000Z
+   */
+  dateformat?: "YYYY年MM月DD日"
+) => {
   const isString = typeof date === "string";
-  if (!isString) return toJSTFromUTC(date);
+  if (!isString) return toJSTFromUTC(date, dateformat);
 
   const hasJSTTimezone = date.includes("+09:00");
 
@@ -56,8 +51,8 @@ export const dayJST = (date?: Parameters<typeof dayjs.utc>[0]) => {
   // 具体例だと、"2000-01-01T00:00:00+09:00"をUTCに変換すると、"2000-01-01T00:00:00.000Z"になってほしいが、"1999-12-31T15:00:00Z"になる。
   if (hasJSTTimezone) {
     const datestring = toRemovedJSTTimezoneString(date);
-    return toJSTFromUTC(datestring);
+    return toJSTFromUTC(datestring, dateformat);
   }
 
-  return toJSTFromUTC(date);
+  return toJSTFromUTC(date, dateformat);
 };
