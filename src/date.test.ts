@@ -1,4 +1,4 @@
-import { expect, describe, it, vi, beforeEach, afterEach } from "vitest";
+import { expect, describe, it, vi } from "vitest";
 import * as Features from "./date";
 
 describe("タイムゾーンが変わっている", () => {

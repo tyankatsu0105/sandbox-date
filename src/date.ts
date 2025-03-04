@@ -28,15 +28,15 @@ const toJSTFromUTC = (...params: Parameters<typeof dayjs.utc>) =>
 /**
  * JST文字列に変換する
  */
-const toJST = (date: string) => dayjs(date).tz(TIMEZONE);
+const toJST = (
+  date: Parameters<typeof dayjs>[0],
+  format?: Parameters<typeof dayjs>[1]
+) => dayjs(date, format).tz(TIMEZONE);
 /**
  * 日付文字列を、JSTの日付オブジェクトに変換する
  */
 export const dayJST = (
-  /**
-   * NOTE: タイムゾーンがずれるので、Dateは渡せない
-   */
-  date?: Exclude<Parameters<typeof dayjs.utc>[0], Date>,
+  date?: Parameters<typeof dayjs.utc>[0],
   /**
    * 第一引数の文字列を、dayjsが標準で日付として認識できない場合、日付として解析させる文字列
    *
@@ -63,9 +63,13 @@ export const dayJST = (
   }
 
   if (dateformat) {
-    const jstString = dayjs(date, dateformat).tz(TIMEZONE).subtract(18, "hour");
+    /**
+     * NOTE: 2020-01-01のような文字列が来ても、タイムゾーンが未定なので、これを確定し、JSTとして扱う必要がある。
+     * まずJSTとして扱い、+9時間された時間と、UTCに変換するための9時間の合計18時間を引くことで、UTCと思われる文字列に変換する。
+     */
+    const utcString = toJST(date, dateformat).subtract(18, "hour");
 
-    const datestring = toUTC(jstString.toISOString());
+    const datestring = toUTC(utcString.toISOString());
 
     return toJST(datestring);
   }
