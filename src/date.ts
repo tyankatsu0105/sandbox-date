@@ -45,12 +45,14 @@ export const dayJST = (
   if (!isString) return toJSTFromUTC(date, dateformat);
 
   const hasJSTTimezone = date.includes("+09:00");
+  const isUserTimezoneJapan =
+    Intl.DateTimeFormat().resolvedOptions().timeZone === TIMEZONE;
 
-  // NOTE: アプリケーションとしては、日付をUTCに変換してJSTに変換する前提である。
-  // そのため、+09:00を含むJST文字列をUTCに変換してJSTとして変換してしまうと、+09:00が2回加算されてしまう。
-  // 具体例だと、"2000-01-01T00:00:00+09:00"をUTCに変換すると、"2000-01-01T00:00:00.000Z"になってほしいが、"1999-12-31T15:00:00Z"になる。
   if (hasJSTTimezone) {
     const datestring = toRemovedJSTTimezoneString(date);
+
+    if (isUserTimezoneJapan) return toJSTFromUTC(datestring, dateformat);
+
     return toJSTFromUTC(datestring, dateformat);
   }
 
