@@ -30,6 +30,7 @@ describe("dayJST", () => {
       process.env.TZ = timezone;
 
       const date = "2000-01-01";
+      // eslint-disable-next-line no-restricted-syntax
       const time = new Date(date);
       vi.setSystemTime(time);
 
